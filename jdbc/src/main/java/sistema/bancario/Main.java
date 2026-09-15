@@ -2,33 +2,34 @@ package sistema.bancario;
 import java.io.Console;
 
 public class Main {
-    private final Console console = System.console();
+    static Console console = System.console();
 
     public static void main(String[] args) {
-        Main app = new Main();
         int opcao;
 
         do {
-            app.exibirMenu();
-            String entrada = app.console.readLine();
-            opcao = Integer.parseInt(entrada);
+            exibirMenu();
+            opcao = Integer.parseInt(console.readLine());
 
             switch (opcao) {
-                case 1 -> app.criarConta();
-                case 2 -> app.consultarConta();
-                case 3 -> app.depositar();
-                case 4 -> app.sacar();
-                case 5 -> app.transferir();
-                case 6 -> app.consultarSaldo();
-                case 7 -> app.historicoTransacoes();
-                case 8 -> app.listarClientes();
-                case 0 -> System.out.println("Saindo do sistema...");
+                case 1 -> criarConta();
+                case 2 -> consultarConta();
+                case 3 -> depositar();
+                case 4 -> sacar();
+                case 5 -> transferir();
+                case 6 -> consultarSaldo();
+                case 7 -> historicoTransacoes();
+                case 8 -> listarClientes();
+                case 9 -> {
+                    System.out.println("Saindo do sistema...");
+                    System.exit(0);
+                }
                 default -> System.out.println("Opção inválida. Tente novamente.");
-            }
-        } while (opcao != 0);
-    }
+            } 
 
-    private void exibirMenu() {
+        } while (opcao != 9);
+    }
+    private static void exibirMenu() {
         System.out.println("=== Sistema Bancário ===");
         System.out.println("1 - Criar conta");
         System.out.println("2 - Consultar conta");
@@ -38,39 +39,42 @@ public class Main {
         System.out.println("6 - Consultar saldo");
         System.out.println("7 - Histórico de transações");
         System.out.println("8 - Listar clientes");
-        System.out.println("0 - Sair");
-        System.out.print("Escolha uma opção: ");
+        System.out.println("9 - Sair");
+        System.out.println("Escolha uma opção: ");
     }
 
-    public void criarConta() {
+    public static void criarConta() {
         // Implementação para criar conta
     }
 
-    public void consultarConta() {
+    public static void consultarConta() {
         // Implementação para consultar conta
     }
 
-    public void depositar() {
+    public static void depositar() {
         // Implementação para depositar
     }
 
-    public void sacar() {
+    public static void sacar() {
         // Implementação para sacar
     }
 
-    public void transferir() {
+    public static void transferir() {
         // Implementação para transferir
     }
 
-    public void consultarSaldo() {
+    public static void consultarSaldo() {
         // Implementação para consultar saldo
     }
 
-    public void historicoTransacoes() {
+    public static void historicoTransacoes() {
         // Implementação para histórico de transações
     }
 
-    public void listarClientes() {
+    public static void listarClientes() {
         // Implementação para listar clientes
     }
+    
+
+
 }
