@@ -31,6 +31,7 @@ public class Main {
     }
     private static void exibirMenu() {
         System.out.println("=== Sistema Bancário ===");
+        System.out.println("0 - Cadastro");
         System.out.println("1 - Criar conta");
         System.out.println("2 - Consultar conta");
         System.out.println("3 - Depositar");
@@ -43,6 +44,10 @@ public class Main {
         System.out.println("Escolha uma opção: ");
     }
 
+    public static void cadastro() {
+        // Implementação para cadastro
+    }
+    
     public static void criarConta() {
         // Implementação para criar conta
     }
