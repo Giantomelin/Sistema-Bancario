@@ -61,6 +61,18 @@ public class BancoDAO {
         }
     }
 
+    public void sacar(Long id, double valor) throws SQLException{
+        var sql = "UPDATE contas SET saldo = saldo - ? WHERE Id = ?";
+        try (var connection = Conexao.getConnection();
+             var statement = connection.prepareStatement(sql)) {
+            statement.setDouble(1, valor);
+            statement.setLong(2, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao sacar: " + e.getMessage());
+        }
+    }
+
 }
     
 
