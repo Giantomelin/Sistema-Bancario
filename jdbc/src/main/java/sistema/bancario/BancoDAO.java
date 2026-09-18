@@ -1,5 +1,6 @@
 package sistema.bancario;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 public class BancoDAO {
 
@@ -25,6 +26,26 @@ public class BancoDAO {
             statement.setLong(3, conta.idCliente());
         } catch (SQLException e) {
             throw new SQLException("Erro ao criar conta: " + e.getMessage());
+        }
+    }
+
+    public void consultarConta(Long id) throws SQLException{
+        var sql = "SELECT * FROM contas WHERE Id = ?";
+        try (var connection = Conexao.getConnection();){
+            var statement = connection.prepareStatement(sql);
+            statement.setLong(1, id);
+            try (ResultSet rs = statement.executeQuery()){
+                if (rs.next()) {
+                    rs.getLong("id");
+                    rs.getString("tipo");
+                    rs.getDouble("saldo");
+                    rs.getLong("idCliente");
+                } else {
+                    System.out.println("Conta não encontrada.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao consultar conta: " + e.getMessage());
         }
     }
 

@@ -45,7 +45,7 @@ public class Main {
     }
 
     public static void cadastro() {
-        // Implementação para cadastro
+        
     }
     
     public static void criarConta() {
