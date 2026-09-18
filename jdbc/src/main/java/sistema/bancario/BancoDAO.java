@@ -73,6 +73,14 @@ public class BancoDAO {
         }
     }
 
+    public void transferir(Long idOrigem, Long idDestino, double valor) throws SQLException{
+        var sqlSaque = "UPDATE contas SET saldo = saldo - ? WHERE Id = ?";
+        var sqlDeposito = "UPDATE contas SET saldo = saldo + ? WHERE Id = ?";
+        try (var connection = Conexao.getConnection()) {
+            
+        }
+    }
+
 }
     
 
