@@ -130,6 +130,25 @@ public class BancoDAO {
         }
     }
 
+    public void historicoTransacoes(Long id) throws SQLException{
+        var sql = "SELECT * FROM transacoes WHERE id_conta = ?";
+        try (var connection = Conexao.getConnection();
+             var statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, id);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    long idTransacao = rs.getLong("id");
+                    String tipo = rs.getString("tipo");
+                    double valor = rs.getDouble("valor");
+                    String data = rs.getString("data");
+                    System.out.println("ID: " + idTransacao + ", Tipo: " + tipo + ", Valor: " + valor + ", Data: " + data);
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao consultar histórico de transações: " + e.getMessage());
+        }
+    }
+
 }
     
 
