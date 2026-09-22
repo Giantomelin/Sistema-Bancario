@@ -129,7 +129,13 @@ public class Main {
     }
 
     public static void consultarSaldo() {
-        // Implementação para consultar saldo
+        Long Id = Long.parseLong(console.readLine("Digite o ID da conta: "));
+        BancoDAO bancoDAO = new BancoDAO();
+        try {
+            double saldo = bancoDAO.consultarSaldo(Id);
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar saldo: " + e.getMessage());
+        }
     }
 
     public static void historicoTransacoes() {

@@ -123,7 +123,7 @@ public class BancoDAO {
         }
     }
 
-    public void consultarSaldo(Long id) throws SQLException{
+    public double consultarSaldo(Long id) throws SQLException{
         var sql = "SELECT saldo FROM contas WHERE Id = ?";
         try (var connection = Conexao.getConnection();
              var statement = connection.prepareStatement(sql)) {
@@ -131,15 +131,17 @@ public class BancoDAO {
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
                     double saldo = rs.getDouble("saldo");
-                    System.out.println("Saldo da conta " + id + ": " + saldo);
+                    System.out.println("Saldo da conta: " + saldo);
+                    return saldo;
                 } else {
                     System.out.println("Conta não encontrada.");
+                    return 0.0;
                 }
             }
         } catch (SQLException e) {
             throw new SQLException("Erro ao consultar saldo: " + e.getMessage());
         }
-    }
+    } 
 
     public void historicoTransacoes(Long id) throws SQLException{
         var sql = "SELECT * FROM transacoes WHERE id_conta = ?";
