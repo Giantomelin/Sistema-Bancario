@@ -104,7 +104,15 @@ public class Main {
     }
 
     public static void sacar() {
-        // Implementação para sacar
+        Long id = Long.parseLong(console.readLine("Digite o ID da conta: "));
+        double valor = Double.parseDouble(console.readLine("Digite o valor que se deseja sacar: "));
+        BancoDAO bancoDAO = new BancoDAO();
+        try {
+            bancoDAO.sacar(id, valor);
+            System.out.println("Saque realizado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao realizar saque: " + e.getMessage());
+        }
     }
 
     public static void transferir() {
