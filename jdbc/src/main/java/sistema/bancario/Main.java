@@ -116,7 +116,16 @@ public class Main {
     }
 
     public static void transferir() {
-        // Implementação para transferir
+        Long IdOrigem = Long.parseLong(console.readLine("Digite o ID da conta de origem: "));
+        Long IdDestino = Long.parseLong(console.readLine("Digite o ID da conta de destino: "));
+        double valor = Double.parseDouble(console.readLine("Digite o valor a ser transferido: "));
+        BancoDAO bancoDAO = new BancoDAO();
+        try {
+            bancoDAO.transferir(IdOrigem, IdDestino, valor);
+            System.out.println("Transferência realizada com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao realizar transferência: " + e.getMessage());
+        }
     }
 
     public static void consultarSaldo() {
