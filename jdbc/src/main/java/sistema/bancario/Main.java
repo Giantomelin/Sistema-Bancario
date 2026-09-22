@@ -60,7 +60,16 @@ public class Main {
     }
     
     public static void criarConta() {
-        // Implementação para criar conta
+        Long idCliente = Long.parseLong(console.readLine("Digite o ID do cliente: "));
+        String tipo = console.readLine("Digite o tipo da conta (corrente/poupança): ");
+        Contas conta = new Contas(tipo, 0.0, idCliente);
+        BancoDAO bancoDAO = new BancoDAO();
+        try {
+            bancoDAO.criarConta(conta);
+            System.out.println("Conta criada com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao criar conta: " + e.getMessage());
+        }
     }
 
     public static void consultarConta() {
