@@ -139,7 +139,13 @@ public class Main {
     }
 
     public static void historicoTransacoes() {
-        // Implementação para histórico de transações
+        Long Id = Long.parseLong(console.readLine("Digite o ID da conta: "));
+        BancoDAO bancoDAO = new BancoDAO();
+        try {
+            bancoDAO.historicoTransacoes(Id);
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar histórico de transações: " + e.getMessage());
+        }
     }
 
     public static void listarClientes() {
