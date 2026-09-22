@@ -51,11 +51,17 @@ public class BancoDAO {
 
     public void depositar(Long id, double valor) throws SQLException{
         var sql = "UPDATE contas SET saldo = saldo + ? WHERE Id = ?";
+        var sqlTransacao = "INSERT INTO transacoes (tipo, valor, id_conta, data) VALUES (?, ?, ?, NOW())";
         try (var connection = Conexao.getConnection();
-             var statement = connection.prepareStatement(sql)) {
+             var statement = connection.prepareStatement(sql);
+             var statementTransacao = connection.prepareStatement(sqlTransacao)) {
             statement.setDouble(1, valor);
             statement.setLong(2, id);
             statement.executeUpdate();
+            statementTransacao.setString(1, "Depósito");
+            statementTransacao.setDouble(2, valor);
+            statementTransacao.setLong(3, id);
+            statementTransacao.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Erro ao depositar: " + e.getMessage());
         }
@@ -63,11 +69,17 @@ public class BancoDAO {
 
     public void sacar(Long id, double valor) throws SQLException{
         var sql = "UPDATE contas SET saldo = saldo - ? WHERE Id = ?";
+        var sqlTransacao = "INSERT INTO transacoes (tipo, valor, id_conta, data) VALUES (?, ?, ?, NOW())";
         try (var connection = Conexao.getConnection();
-             var statement = connection.prepareStatement(sql)) {
+             var statement = connection.prepareStatement(sql);
+             var statementTransacao = connection.prepareStatement(sqlTransacao)) {
             statement.setDouble(1, valor);
             statement.setLong(2, id);
             statement.executeUpdate();
+            statementTransacao.setString(1, "Saque");
+            statementTransacao.setDouble(2, valor);
+            statementTransacao.setLong(3, id);
+            statementTransacao.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Erro ao sacar: " + e.getMessage());
         }
@@ -76,9 +88,11 @@ public class BancoDAO {
     public void transferir(Long idOrigem, Long idDestino, double valor) throws SQLException{
         var sqlSaque = "UPDATE contas SET saldo = saldo - ? WHERE Id = ?";
         var sqlDeposito = "UPDATE contas SET saldo = saldo + ? WHERE Id = ?";
+        var sqlTransferencia = "INSERT INTO transacoes (tipo, valor, id_conta, data) VALUES (?, ?, ?, NOW())";
         try (var connection = Conexao.getConnection()) {
             try (var statementSaque = connection.prepareStatement(sqlSaque);
-                 var statementDeposito = connection.prepareStatement(sqlDeposito)) {
+                 var statementDeposito = connection.prepareStatement(sqlDeposito);
+                 var statementTransferencia = connection.prepareStatement(sqlTransferencia)) {
                 connection.setAutoCommit(false);
                 statementSaque.setDouble(1, valor);
                 statementSaque.setLong(2, idOrigem);
@@ -86,11 +100,33 @@ public class BancoDAO {
                 statementDeposito.setDouble(1, valor);
                 statementDeposito.setLong(2, idDestino);
                 statementDeposito.executeUpdate();
+                statementTransferencia.setString(1, "Transferência");
+                statementTransferencia.setDouble(2, valor);
+                statementTransferencia.setLong(3, idOrigem);
+                statementTransferencia.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
                 connection.rollback();
                 throw new SQLException("Erro ao transferir: " + e.getMessage());
             }
+        }
+    }
+
+    public void consultarSaldo(Long id) throws SQLException{
+        var sql = "SELECT saldo FROM contas WHERE Id = ?";
+        try (var connection = Conexao.getConnection();
+             var statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, id);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    double saldo = rs.getDouble("saldo");
+                    System.out.println("Saldo da conta " + id + ": " + saldo);
+                } else {
+                    System.out.println("Conta não encontrada.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao consultar saldo: " + e.getMessage());
         }
     }
 
