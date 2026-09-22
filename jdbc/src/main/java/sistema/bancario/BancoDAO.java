@@ -149,6 +149,23 @@ public class BancoDAO {
         }
     }
 
+    public void listarClientes() throws SQLException{
+        var sql = "SELECT * FROM clientes";
+        try (var connection = Conexao.getConnection();
+             var statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                String nome = rs.getString("nome");
+                String cpf = rs.getString("cpf");
+                String email = rs.getString("email");
+                System.out.println("ID: " + id + ", Nome: " + nome + ", CPF: " + cpf + ", Email: " + email);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao listar clientes: " + e.getMessage());
+        }
+    }
+
 }
     
 
