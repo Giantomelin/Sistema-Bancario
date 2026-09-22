@@ -77,7 +77,20 @@ public class BancoDAO {
         var sqlSaque = "UPDATE contas SET saldo = saldo - ? WHERE Id = ?";
         var sqlDeposito = "UPDATE contas SET saldo = saldo + ? WHERE Id = ?";
         try (var connection = Conexao.getConnection()) {
-            
+            try (var statementSaque = connection.prepareStatement(sqlSaque);
+                 var statementDeposito = connection.prepareStatement(sqlDeposito)) {
+                connection.setAutoCommit(false);
+                statementSaque.setDouble(1, valor);
+                statementSaque.setLong(2, idOrigem);
+                statementSaque.executeUpdate();
+                statementDeposito.setDouble(1, valor);
+                statementDeposito.setLong(2, idDestino);
+                statementDeposito.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new SQLException("Erro ao transferir: " + e.getMessage());
+            }
         }
     }
 
