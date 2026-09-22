@@ -64,9 +64,11 @@ public class BancoDAO {
             statement.setDouble(1, valor);
             statement.setLong(2, id);
             statement.executeUpdate();
+
             statementTransacao.setString(1, "Depósito");
             statementTransacao.setDouble(2, valor);
             statementTransacao.setLong(3, id);
+            
             statementTransacao.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Erro ao depositar: " + e.getMessage());

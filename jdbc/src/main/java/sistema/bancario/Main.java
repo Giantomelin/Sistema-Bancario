@@ -92,7 +92,15 @@ public class Main {
     }
 
     public static void depositar() {
-        // Implementação para depositar
+        Long id = Long.parseLong(console.readLine("Digite o ID da conta: "));
+        double valor = Double.parseDouble(console.readLine("Digite o valor a ser depositado: "));
+        BancoDAO bancoDAO = new BancoDAO();
+        try {
+            bancoDAO.depositar(id, valor);
+            System.out.println("Depósito realizado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao realizar depósito: " + e.getMessage());
+        }
     }
 
     public static void sacar() {
