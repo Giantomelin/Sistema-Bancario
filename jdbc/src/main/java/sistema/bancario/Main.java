@@ -12,6 +12,7 @@ public class Main {
             opcao = Integer.parseInt(console.readLine());
 
             switch (opcao) {
+                case 0 -> cadastro();
                 case 1 -> criarConta();
                 case 2 -> consultarConta();
                 case 3 -> depositar();
@@ -45,7 +46,17 @@ public class Main {
     }
 
     public static void cadastro() {
-        
+        String nome = console.readLine("Digite o nome do cliente: ");
+        String cpf = console.readLine("Digite o CPF do cliente: ");
+        String email = console.readLine("Digite o email do cliente: ");
+        Clientes cliente = new Clientes(nome, cpf, email);
+        BancoDAO bancoDAO = new BancoDAO();
+        try {
+            bancoDAO.cadastrar(cliente);
+            System.out.println("Cliente cadastrado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao cadastrar cliente: " + e.getMessage());
+        }
     }
     
     public static void criarConta() {
