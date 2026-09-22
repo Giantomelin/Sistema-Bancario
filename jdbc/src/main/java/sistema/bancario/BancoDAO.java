@@ -18,28 +18,33 @@ public class BancoDAO {
     }
 
     public void criarConta(Contas conta) throws SQLException{
-        var sql = "INSERT INTO contas (tipo, saldo, idCliente) VALUES (?, ?, ?)";
+        var sql = "INSERT INTO contas (tipo, saldo, Clientes_Id) VALUES (?, ?, ?)";
         try (var connection = Conexao.getConnection();
              var statement = connection.prepareStatement(sql)) {
             statement.setString(1, conta.tipo());
             statement.setDouble(2, conta.saldo());
             statement.setLong(3, conta.idCliente());
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Erro ao criar conta: " + e.getMessage());
         }
     }
 
-    public void consultarConta(Long id) throws SQLException{
+    public Contas consultarConta(Long id) throws SQLException{
         var sql = "SELECT * FROM contas WHERE Id = ?";
+
+        Contas conta = null;
         try (var connection = Conexao.getConnection();){
             var statement = connection.prepareStatement(sql);
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()){
                 if (rs.next()) {
-                    rs.getLong("id");
-                    rs.getString("tipo");
-                    rs.getDouble("saldo");
-                    rs.getLong("idCliente");
+                        conta = new Contas(
+                            rs.getLong("Id"),
+                            rs.getString("tipo"),
+                            rs.getDouble("saldo"),
+                            rs.getLong("Clientes_Id")
+                    );
                 } else {
                     System.out.println("Conta não encontrada.");
                 }
@@ -47,6 +52,7 @@ public class BancoDAO {
         } catch (SQLException e) {
             throw new SQLException("Erro ao consultar conta: " + e.getMessage());
         }
+        return conta;
     }
 
     public void depositar(Long id, double valor) throws SQLException{

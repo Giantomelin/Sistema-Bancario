@@ -73,7 +73,22 @@ public class Main {
     }
 
     public static void consultarConta() {
-        // Implementação para consultar conta
+        Long id = Long.parseLong(console.readLine("Digite o ID da conta: "));
+        BancoDAO bancoDAO = new BancoDAO();
+        try {
+            Contas conta = bancoDAO.consultarConta(id);
+            if (conta != null) {
+                System.out.println("Conta encontrada: ");
+                System.out.println("ID: " + conta.id());
+                System.out.println("Tipo: " + conta.tipo());
+                System.out.println("Saldo: " + conta.saldo());
+            } else {
+                System.out.println("Conta não encontrada.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar conta: " + e.getMessage());
+        }
     }
 
     public static void depositar() {
