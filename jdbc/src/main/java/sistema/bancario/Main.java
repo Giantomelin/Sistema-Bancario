@@ -149,7 +149,12 @@ public class Main {
     }
 
     public static void listarClientes() {
-        // Implementação para listar clientes
+        BancoDAO bancoDAO = new BancoDAO();
+        try {
+            bancoDAO.listarClientes();
+        } catch (Exception e) {
+            System.out.println("Erro ao listar clientes: " + e.getMessage());
+        }
     }
     
 
