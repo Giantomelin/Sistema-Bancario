@@ -15,7 +15,7 @@ public class BancoDAO {
             statement.setString(3, cliente.email());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new SQLException("Erro ao cadastrar cliente: " + e.getMessage());
+            throw new SQLException(e.getMessage());
         } 
     }
 
@@ -27,7 +27,7 @@ public class BancoDAO {
             statement.setDouble(2, conta.saldo());
             statement.setLong(3, conta.idCliente());
         } catch (SQLException e) {
-            throw new SQLException("Erro ao criar conta: " + e.getMessage());
+            throw new SQLException(e.getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ public class BancoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException("Erro ao consultar conta: " + e.getMessage());
+            throw new SQLException(e.getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ public class BancoDAO {
             statementTransacao.setLong(3, id);
             statementTransacao.executeUpdate();
         } catch (SQLException e) {
-            throw new SQLException("Erro ao depositar: " + e.getMessage());
+            throw new SQLException(e.getMessage());
         }
     }
 
@@ -87,7 +87,7 @@ public class BancoDAO {
             statementTransacao.setLong(3, id);
             statementTransacao.executeUpdate();
         } catch (SQLException e) {
-            throw new SQLException("Erro ao sacar: " + e.getMessage());
+            throw new SQLException(e.getMessage());
         }
     }
 
@@ -102,18 +102,24 @@ public class BancoDAO {
                 connection.setAutoCommit(false);
                 statementSaque.setDouble(1, valor);
                 statementSaque.setLong(2, idOrigem);
+
                 statementSaque.executeUpdate();
+
                 statementDeposito.setDouble(1, valor);
                 statementDeposito.setLong(2, idDestino);
+
                 statementDeposito.executeUpdate();
+
                 statementTransferencia.setString(1, "Transferência");
                 statementTransferencia.setDouble(2, valor);
                 statementTransferencia.setLong(3, idOrigem);
+
                 statementTransferencia.executeUpdate();
+                
                 connection.commit();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new SQLException("Erro ao transferir: " + e.getMessage());
+                throw new SQLException(e.getMessage());
             }
         }
     }
