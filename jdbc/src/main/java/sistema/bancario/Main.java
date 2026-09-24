@@ -83,8 +83,6 @@ public class Main {
                 System.out.println("ID: " + conta.id());
                 System.out.println("Tipo: " + conta.tipo());
                 System.out.println("Saldo: " + conta.saldo());
-            } else {
-                System.out.println("Conta não encontrada.");
             }
 
         } catch (Exception e) {
@@ -136,8 +134,6 @@ public class Main {
             Contas conta = bancoDAO.consultarConta(Id);
             if (conta != null) {
                 System.out.println("Saldo da conta: " + conta.saldo());
-            } else {
-                System.out.println("Conta não encontrada.");
             }
         } catch (Exception e) {
             System.out.println("Erro ao consultar saldo: " + e.getMessage());
@@ -148,7 +144,11 @@ public class Main {
         Long Id = Long.parseLong(console.readLine("Digite o ID da conta: "));
         BancoDAO bancoDAO = new BancoDAO();
         try {
-            bancoDAO.historicoTransacoes(Id);
+            Contas conta = bancoDAO.consultarConta(Id);
+            if (conta != null) {
+                System.out.println("=== Histórico de Transações ===");
+                bancoDAO.historicoTransacoes(Id);
+            }
         } catch (Exception e) {
             System.out.println("Erro ao consultar histórico de transações: " + e.getMessage());
         }
