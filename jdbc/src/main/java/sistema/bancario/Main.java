@@ -62,10 +62,18 @@ public class Main {
     
     public static void criarConta() {
         Long idCliente = Long.parseLong(console.readLine("Digite o ID do cliente: "));
-        String tipo = console.readLine("Digite o tipo da conta (corrente/poupança): ");
-        Contas conta = new Contas(tipo, 0.0, idCliente);
         BancoDAO bancoDAO = new BancoDAO();
         try {
+            Clientes cliente = bancoDAO.consultarCliente(idCliente);
+            if (cliente == null) {
+                return;
+            }
+            String tipo = console.readLine("Digite o tipo da conta (corrente/poupança): ");
+            if (!tipo.equalsIgnoreCase("corrente") && !tipo.equalsIgnoreCase("poupança")) {
+                System.out.println("Tipo de conta inválido. Escolha entre 'corrente' ou 'poupança'.");
+                return;
+            }
+            Contas conta = new Contas(tipo, 0.0, idCliente);
             bancoDAO.criarConta(conta);
             System.out.println("Conta criada com sucesso!");
         } catch (Exception e) {

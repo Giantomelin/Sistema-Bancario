@@ -19,6 +19,28 @@ public class BancoDAO {
         } 
     }
 
+    public Clientes consultarCliente(Long id) throws SQLException{
+        var sql = "SELECT * FROM Clientes WHERE Id = ?";
+        try (var connection = Conexao.getConnection();
+             var statement = connection.prepareStatement(sql)){
+                statement.setLong(1, id);
+                try (ResultSet rs = statement.executeQuery()){
+                    if (rs.next()) {
+                        Clientes cliente = new Clientes(
+                            rs.getLong("id"),
+                            rs.getString("nome"),
+                            rs.getString("cpf"),
+                            rs.getString("email")
+                        );
+                        return cliente;
+                    } else {
+                        System.out.println("Cliente não encontrado. Crie o cliente antes de criar a conta.");
+                        return null;
+                    }
+                }
+             }
+    }
+
     public void criarConta(Contas conta) throws SQLException{
         var sql = "INSERT INTO contas (tipo, saldo, idCliente) VALUES (?, ?, ?)";
         try (var connection = Conexao.getConnection();
