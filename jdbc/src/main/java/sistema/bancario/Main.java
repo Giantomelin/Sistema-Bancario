@@ -1,5 +1,6 @@
 package sistema.bancario;
 import java.io.Console;
+import java.util.List;
 
 public class Main {
     static Console console = System.console();
@@ -156,7 +157,15 @@ public class Main {
     public static void listarClientes() {
         BancoDAO bancoDAO = new BancoDAO();
         try {
-            bancoDAO.listarClientes();
+            List<Clientes> clientes = bancoDAO.listarClientes();
+            if (clientes != null) {
+                System.out.println("=== Lista de Clientes ===");
+                for (Clientes cliente : clientes) {
+                    System.out.println("ID: " + cliente.id() + ", Nome: " + cliente.nome() + ", CPF: " + cliente.cpf() + ", Email: " + cliente.email());
+                }
+            } else {
+                System.out.println("Nenhum cliente encontrado.");
+            }
         } catch (Exception e) {
             System.out.println("Erro ao listar clientes: " + e.getMessage());
         }
