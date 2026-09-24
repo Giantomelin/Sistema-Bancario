@@ -49,7 +49,15 @@ public class Main {
     public static void cadastro() {
         String nome = console.readLine("Digite o nome do cliente: ");
         String cpf = console.readLine("Digite o CPF do cliente: ");
+        if (cpf.length() != 11){
+            System.out.println("CPF inválido. O CPF deve conter 11 dígitos.");
+            return;
+        }
         String email = console.readLine("Digite o email do cliente: ");
+        if (!email.contains("@") || !email.contains(".com") || !email.endsWith(".com")) {
+            System.out.println("Email inválido. O email deve conter '@' e terminar com '.com'");
+            return;
+        }
         Clientes cliente = new Clientes(nome, cpf, email);
         BancoDAO bancoDAO = new BancoDAO();
         try {
