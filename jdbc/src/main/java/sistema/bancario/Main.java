@@ -92,9 +92,17 @@ public class Main {
 
     public static void depositar() {
         Long id = Long.parseLong(console.readLine("Digite o ID da conta: "));
-        double valor = Double.parseDouble(console.readLine("Digite o valor a ser depositado: "));
         BancoDAO bancoDAO = new BancoDAO();
         try {
+            Contas conta = bancoDAO.consultarConta(id);
+            if (conta == null) {
+                return;
+            }
+            double valor = Double.parseDouble(console.readLine("Digite o valor a ser depositado: "));
+            if (valor <= 0) {
+                System.out.println("O valor do depósito deve ser maior que zero.");
+                return;
+            }
             bancoDAO.depositar(id, valor);
             System.out.println("Depósito realizado com sucesso!");
         } catch (Exception e) {
@@ -110,7 +118,6 @@ public class Main {
             Contas conta = bancoDAO.consultarConta(id);
 
             if (conta == null) {
-                System.out.println("Conta não encontrada.");
                 return;
             }
             double valor = Double.parseDouble(console.readLine("Digite o valor que deseja sacar: "));
