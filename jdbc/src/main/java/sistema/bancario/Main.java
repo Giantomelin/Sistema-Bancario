@@ -132,7 +132,12 @@ public class Main {
         Long Id = Long.parseLong(console.readLine("Digite o ID da conta: "));
         BancoDAO bancoDAO = new BancoDAO();
         try {
-            double saldo = bancoDAO.consultarSaldo(Id);
+            Contas conta = bancoDAO.consultarConta(Id);
+            if (conta != null) {
+                System.out.println("Saldo da conta: " + conta.saldo());
+            } else {
+                System.out.println("Conta não encontrada.");
+            }
         } catch (Exception e) {
             System.out.println("Erro ao consultar saldo: " + e.getMessage());
         }

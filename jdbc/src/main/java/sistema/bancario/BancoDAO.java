@@ -118,23 +118,6 @@ public class BancoDAO {
         }
     }
 
-    public void consultarSaldo(Long id) throws SQLException{
-        var sql = "SELECT saldo FROM contas WHERE Id = ?";
-        try (var connection = Conexao.getConnection();
-             var statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, id);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
-                    double saldo = rs.getDouble("saldo");
-                    System.out.println("Saldo da conta " + id + ": " + saldo);
-                } else {
-                    System.out.println("Conta não encontrada.");
-                }
-            }
-        } catch (SQLException e) {
-            throw new SQLException("Erro ao consultar saldo: " + e.getMessage());
-        }
-    }
 
     public void historicoTransacoes(Long id) throws SQLException{
         var sql = "SELECT * FROM transacoes WHERE id_conta = ?";
