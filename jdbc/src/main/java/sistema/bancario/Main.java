@@ -104,9 +104,24 @@ public class Main {
 
     public static void sacar() {
         Long id = Long.parseLong(console.readLine("Digite o ID da conta: "));
-        double valor = Double.parseDouble(console.readLine("Digite o valor que se deseja sacar: "));
         BancoDAO bancoDAO = new BancoDAO();
+
         try {
+            Contas conta = bancoDAO.consultarConta(id);
+
+            if (conta == null) {
+                System.out.println("Conta não encontrada.");
+                return;
+            }
+            double valor = Double.parseDouble(console.readLine("Digite o valor que deseja sacar: "));
+            if (valor <= 0) {
+                System.out.println("O valor do saque deve ser maior que zero.");
+                return;
+            }
+            if (valor > conta.saldo()) {
+                System.out.println("Saldo insuficiente.");
+                return;
+            }
             bancoDAO.sacar(id, valor);
             System.out.println("Saque realizado com sucesso!");
         } catch (Exception e) {
