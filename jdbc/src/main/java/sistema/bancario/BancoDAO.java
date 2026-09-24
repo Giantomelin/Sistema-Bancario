@@ -2,6 +2,8 @@ package sistema.bancario;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 public class BancoDAO {
 
     public void cadastrar(Clientes cliente) throws SQLException {
@@ -18,33 +20,28 @@ public class BancoDAO {
     }
 
     public void criarConta(Contas conta) throws SQLException{
-        var sql = "INSERT INTO contas (tipo, saldo, Clientes_Id) VALUES (?, ?, ?)";
+        var sql = "INSERT INTO contas (tipo, saldo, idCliente) VALUES (?, ?, ?)";
         try (var connection = Conexao.getConnection();
              var statement = connection.prepareStatement(sql)) {
             statement.setString(1, conta.tipo());
             statement.setDouble(2, conta.saldo());
             statement.setLong(3, conta.idCliente());
-            statement.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Erro ao criar conta: " + e.getMessage());
         }
     }
 
-    public Contas consultarConta(Long id) throws SQLException{
+    public void consultarConta(Long id) throws SQLException{
         var sql = "SELECT * FROM contas WHERE Id = ?";
-
-        Contas conta = null;
         try (var connection = Conexao.getConnection();){
             var statement = connection.prepareStatement(sql);
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()){
                 if (rs.next()) {
-                        conta = new Contas(
-                            rs.getLong("Id"),
-                            rs.getString("tipo"),
-                            rs.getDouble("saldo"),
-                            rs.getLong("Clientes_Id")
-                    );
+                    rs.getLong("id");
+                    rs.getString("tipo");
+                    rs.getDouble("saldo");
+                    rs.getLong("idCliente");
                 } else {
                     System.out.println("Conta não encontrada.");
                 }
@@ -52,7 +49,6 @@ public class BancoDAO {
         } catch (SQLException e) {
             throw new SQLException("Erro ao consultar conta: " + e.getMessage());
         }
-        return conta;
     }
 
     public void depositar(Long id, double valor) throws SQLException{
@@ -64,11 +60,9 @@ public class BancoDAO {
             statement.setDouble(1, valor);
             statement.setLong(2, id);
             statement.executeUpdate();
-
             statementTransacao.setString(1, "Depósito");
             statementTransacao.setDouble(2, valor);
             statementTransacao.setLong(3, id);
-
             statementTransacao.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Erro ao depositar: " + e.getMessage());
@@ -83,13 +77,10 @@ public class BancoDAO {
              var statementTransacao = connection.prepareStatement(sqlTransacao)) {
             statement.setDouble(1, valor);
             statement.setLong(2, id);
-
             statement.executeUpdate();
-
             statementTransacao.setString(1, "Saque");
             statementTransacao.setDouble(2, valor);
             statementTransacao.setLong(3, id);
-            
             statementTransacao.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Erro ao sacar: " + e.getMessage());
@@ -123,7 +114,7 @@ public class BancoDAO {
         }
     }
 
-    public double consultarSaldo(Long id) throws SQLException{
+    public void consultarSaldo(Long id) throws SQLException{
         var sql = "SELECT saldo FROM contas WHERE Id = ?";
         try (var connection = Conexao.getConnection();
              var statement = connection.prepareStatement(sql)) {
@@ -131,17 +122,15 @@ public class BancoDAO {
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
                     double saldo = rs.getDouble("saldo");
-                    System.out.println("Saldo da conta: " + saldo);
-                    return saldo;
+                    System.out.println("Saldo da conta " + id + ": " + saldo);
                 } else {
                     System.out.println("Conta não encontrada.");
-                    return 0.0;
                 }
             }
         } catch (SQLException e) {
             throw new SQLException("Erro ao consultar saldo: " + e.getMessage());
         }
-    } 
+    }
 
     public void historicoTransacoes(Long id) throws SQLException{
         var sql = "SELECT * FROM transacoes WHERE id_conta = ?";
@@ -162,24 +151,35 @@ public class BancoDAO {
         }
     }
 
-    public void listarClientes() throws SQLException{
+    public List<Clientes> listarClientes() throws SQLException{
         var sql = "SELECT * FROM clientes";
+
+        List<Clientes> clientes = new ArrayList<>();
+
         try (var connection = Conexao.getConnection();
              var statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery()) {
+            
             while (rs.next()) {
-                long id = rs.getLong("id");
-                String nome = rs.getString("nome");
-                String cpf = rs.getString("cpf");
-                String email = rs.getString("email");
-                System.out.println("ID: " + id + ", Nome: " + nome + ", CPF: " + cpf + ", Email: " + email);
+                Clientes cliente = new Clientes(
+                    rs.getLong("id"),
+                    rs.getString("nome"),
+                    rs.getString("cpf"),
+                    rs.getString("email")
+                );
+                clientes.add(cliente);
             }
         } catch (SQLException e) {
             throw new SQLException("Erro ao listar clientes: " + e.getMessage());
         }
+        return clientes;
     }
 
 }
+    
+
+    
+        
     
 
     
