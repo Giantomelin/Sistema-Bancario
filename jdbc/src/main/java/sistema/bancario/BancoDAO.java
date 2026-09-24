@@ -31,19 +31,23 @@ public class BancoDAO {
         }
     }
 
-    public void consultarConta(Long id) throws SQLException{
+    public Contas consultarConta(Long id) throws SQLException{
         var sql = "SELECT * FROM contas WHERE Id = ?";
         try (var connection = Conexao.getConnection();){
             var statement = connection.prepareStatement(sql);
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()){
                 if (rs.next()) {
-                    rs.getLong("id");
-                    rs.getString("tipo");
-                    rs.getDouble("saldo");
-                    rs.getLong("idCliente");
+                    Contas conta = new Contas(
+                        rs.getLong("id"),
+                        rs.getString("tipo"),
+                        rs.getDouble("saldo"),
+                        rs.getLong("idCliente")
+                    );
+                    return conta;
                 } else {
                     System.out.println("Conta não encontrada.");
+                    return null;
                 }
             }
         } catch (SQLException e) {
