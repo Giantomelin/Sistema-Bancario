@@ -42,7 +42,7 @@ public class BancoDAO {
                         rs.getLong("id"),
                         rs.getString("tipo"),
                         rs.getDouble("saldo"),
-                        rs.getLong("idCliente")
+                        rs.getLong("Clientes_Id")
                     );
                     return conta;
                 } else {
@@ -117,7 +117,6 @@ public class BancoDAO {
             }
         }
     }
-
 
     public void historicoTransacoes(Long id) throws SQLException{
         var sql = "SELECT * FROM transacoes WHERE id_conta = ?";
