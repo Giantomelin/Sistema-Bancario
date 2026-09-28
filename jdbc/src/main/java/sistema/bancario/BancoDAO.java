@@ -48,6 +48,7 @@ public class BancoDAO {
             statement.setString(1, conta.tipo());
             statement.setDouble(2, conta.saldo());
             statement.setLong(3, conta.idCliente());
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
         }
