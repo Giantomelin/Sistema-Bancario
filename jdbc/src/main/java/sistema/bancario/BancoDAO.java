@@ -81,44 +81,54 @@ public class BancoDAO {
     public void depositar(Long id, double valor) throws SQLException{
         var sql = "UPDATE contas SET saldo = saldo + ? WHERE Id = ?";
         var sqlTransacao = "INSERT INTO transacoes (tipo, valor, id_conta, data) VALUES (?, ?, ?, NOW())";
-           try (var connection = Conexao.getConnection();
-               var statement = connection.prepareStatement(sql);
-             var statementTransacao = connection.prepareStatement(sqlTransacao)) {
-            statement.setDouble(1, valor);
-            statement.setLong(2, id);
+        try (var connection = Conexao.getConnection()){
+            connection.setAutoCommit(false);
+            try (var statement = connection.prepareStatement(sql);
+                var statementTransacao = connection.prepareStatement(sqlTransacao)) {
+                statement.setDouble(1, valor);
+                statement.setLong(2, id);
 
-            statement.executeUpdate();
+                statement.executeUpdate();
 
-            statementTransacao.setString(1, "Depósito");
-            statementTransacao.setDouble(2, valor);
-            statementTransacao.setLong(3, id);
+                statementTransacao.setString(1, "Depósito");
+                statementTransacao.setDouble(2, valor);
+                statementTransacao.setLong(3, id);
 
-            statementTransacao.executeUpdate();
+                statementTransacao.executeUpdate();
 
-            connection.commit();
-        } catch (SQLException e) {
-            connection.rollback();
-            throw new SQLException(e.getMessage());
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new SQLException(e.getMessage());
+            }
         }
              
     }
 
     public void sacar(Long id, double valor) throws SQLException{
-        var sql = "UPDATE contas SET saldo = saldo - ? WHERE Id = ?";
+        var sql = "UPDATE contas SET saldo = saldo - ? WHERE Id = ? AND saldo >= ?";
         var sqlTransacao = "INSERT INTO transacoes (tipo, valor, id_conta, data) VALUES (?, ?, ?, NOW())";
-        try (var connection = Conexao.getConnection();
-             var statement = connection.prepareStatement(sql);
-             var statementTransacao = connection.prepareStatement(sqlTransacao)) {
-            statement.setDouble(1, valor);
-            statement.setLong(2, id);
-            statement.executeUpdate();
-            statementTransacao.setString(1, "Saque");
-            statementTransacao.setDouble(2, valor);
-            statementTransacao.setLong(3, id);
-            statementTransacao.executeUpdate();
-            
-        } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+        try (var connection = Conexao.getConnection()){
+            connection.setAutoCommit(false);
+            try (var statement = connection.prepareStatement(sql);
+                var statementTransacao = connection.prepareStatement(sqlTransacao)) {
+                statement.setDouble(1, valor);
+                statement.setLong(2, id);
+                statement.setDouble(3, valor);
+
+                statement.executeUpdate();
+
+                statementTransacao.setString(1, "Saque");
+                statementTransacao.setDouble(2, valor);
+                statementTransacao.setLong(3, id);
+
+                statementTransacao.executeUpdate();
+
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new SQLException(e.getMessage());
+            }
         }
     }
 
