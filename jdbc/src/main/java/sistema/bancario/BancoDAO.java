@@ -172,11 +172,14 @@ public class BancoDAO {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    long idTransacao = rs.getLong("id");
-                    String tipo = rs.getString("tipo");
-                    double valor = rs.getDouble("valor");
-                    String data = rs.getString("data");
-                    System.out.println("ID: " + idTransacao + ", Tipo: " + tipo + ", Valor: " + valor + ", Data: " + data);
+                    Transacoes transacao = new Transacoes(
+                        rs.getLong("id"),
+                        rs.getString("tipo"),
+                        rs.getDouble("valor"),
+                        rs.getLong("id_conta"),
+                        rs.getString("data")
+                    );
+                    System.out.println("ID: " + transacao.id() + ", Tipo: " + transacao.tipo() + ", Valor: " + transacao.valor() + ", Data: " + transacao.data());
                 }
             }
         } catch (SQLException e) {
